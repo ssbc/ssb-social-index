@@ -1,10 +1,12 @@
-# ssb-about
+# ssb-social-index
 
-[scuttlebot](http://scuttlebutt.nz/) plugin for indexing reduced "about" state.
+[scuttlebot](http://scuttlebutt.nz/) plugin for indexing reduced state based on the author's social graph.
+
+It works for all message types that have an `"about": dest` entry, where `dest` is a FeedId/MessageId.
 
 ## Usage
 
-For a detailed example, see `example.js` in this repo.
+This module exports a function that takes a message type as an argument. It then returns a plugin that provides certain indexes for this message type.
 
 ```js
 const Server = require('scuttlebot')
@@ -14,7 +16,7 @@ const config = { ... } // needs options
 Server
   .use(require('scuttlebot/plugins/master')) // required
   .use(require('ssb-backlinks')) // required
-  .use(require('ssb-about'))
+  .use(require('ssb-social-index')('about')) // now this provides the same functionality as the old ssb-about plugin
 
 
 // Start the server
@@ -22,6 +24,8 @@ const server = Server(config)
 ```
 
 ## API
+
+After calling the exported plugin with the argument `"about"`, you get a plugin with the following API. If you called it with `"foo"`, the plugin would index messages of type `"foo"` rather than messages of type `"about"`. The functions would be available as `server.foo.socialvalue(...)` etc.
 
 ### `server.about.socialValue({ key, dest }, cb)`
 

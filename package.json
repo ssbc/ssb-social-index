@@ -1,11 +1,11 @@
 {
-  "name": "ssb-about",
-  "description": "scuttlebot plugin for getting reduced 'about' state",
-  "version": "2.0.0",
-  "homepage": "https://github.com/ssbc/ssb-about",
+  "name": "ssb-social-index",
+  "description": "scuttlebot plugin for getting reduced state based on the author's social graph",
+  "version": "0.0.1",
+  "homepage": "https://github.com/ssbc/ssb-social-index",
   "repository": {
     "type": "git",
-    "url": "git://github.com/ssbc/ssb-about.git"
+    "url": "git://github.com/ssbc/ssb-social-index.git"
   },
   "dependencies": {
     "flumeview-reduce": "^1.3.9",
