@@ -1,7 +1,7 @@
 {
   "name": "ssb-social-index",
   "description": "scuttlebot plugin for getting reduced state based on the author's social graph",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "homepage": "https://github.com/ssbc/ssb-social-index",
   "repository": {
     "type": "git",
