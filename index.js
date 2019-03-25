@@ -2,10 +2,10 @@ var pull = require('pull-stream')
 var ref = require('ssb-ref')
 var Defer = require('pull-defer')
 
-module.exports = function(msgType) {
+module.exports = function(options) {
   const exports = {};
 
-  exports.name = msgType
+  exports.name = options.name
   exports.version = require('./package.json').version
 
   exports.manifest = {
@@ -205,6 +205,9 @@ module.exports = function(msgType) {
     }
 
     function read ({ reverse = false, limit, live, old, dest }) {
+      const content = { type: options.type }
+      content[options.dest] = dest
+
       return pull(
         ssb.backlinks.read({
           reverse,
@@ -212,7 +215,7 @@ module.exports = function(msgType) {
           limit,
           query: [{ $filter: {
             dest,
-            value: { content: { type: msgType, about: dest } }
+            value: { content: content }
           } }]
         })
       )

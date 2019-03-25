@@ -2,11 +2,9 @@
 
 [scuttlebot](http://scuttlebutt.nz/) plugin for indexing reduced state based on the author's social graph.
 
-It works for all message types that have an `"about": dest` entry, where `dest` is a FeedId/MessageId.
-
 ## Usage
 
-This module exports a function that takes a message type as an argument. It then returns a plugin that provides certain indexes for this message type.
+This module exports a function that takes some options as an argument. It then returns a plugin that provides certain indexes determined by those options (see the API section below).
 
 ```js
 const Server = require('scuttlebot')
@@ -16,7 +14,7 @@ const config = { ... } // needs options
 Server
   .use(require('scuttlebot/plugins/master')) // required
   .use(require('ssb-backlinks')) // required
-  .use(require('ssb-social-index')('about')) // now this provides the same functionality as the old ssb-about plugin
+  .use(require('ssb-social-index')({ type: 'about', name: 'about', dest: 'about'})) // now this provides the same functionality as the old ssb-about plugin
 
 
 // Start the server
@@ -25,7 +23,21 @@ const server = Server(config)
 
 ## API
 
-After calling the exported plugin with the argument `"about"`, you get a plugin with the following API. If you called it with `"foo"`, the plugin would index messages of type `"foo"` rather than messages of type `"about"`. The functions would be available as `server.foo.socialvalue(...)` etc.
+The function exported by this module takes an option object with three mandatory fields:
+
+```js
+{
+  name: 'foo',
+  type: 'bar',
+  dest: 'baz'
+}
+```
+
+These options will produce a plugin named `'foo'` that indexes over messages of type `'bar'`, matching `dest` arguments in the provided functions agains a field called `'baz'` on the `'bar'` messages.
+
+For all exposed functions, the `dest` argument must be a FeedId/MessageId.
+
+After calling the exported plugin with all options set to `'about'`, you get a plugin with the following API.
 
 ### `server.about.socialValue({ key, dest }, cb)`
 
