@@ -14,12 +14,28 @@ const config = { ... } // needs options
 Server
   .use(require('scuttlebot/plugins/master')) // required
   .use(require('ssb-backlinks')) // required
-  .use(require('ssb-social-index')({ type: 'about', name: 'about', dest: 'about'})) // now this provides the same functionality as the old ssb-about plugin
-
+  .use(require('ssb-social-index')({
+    namespace: 'edits',
+    type: 'update',
+    destField: 'root'
+  }))
 
 // Start the server
 const server = Server(config)
 ```
+
+In this fictional example, we'd pick up messages of form:
+```js
+{
+  type: 'update',
+  root: '%aleq2po323j12j3s1l2j3s123z',
+  update: {
+    title: 'Scuttle Camp ~~One~~ Two'
+  }
+}
+```
+
+and provide social index methods at `server.edits[METHOD]`
 
 ## API
 
@@ -27,9 +43,9 @@ The function exported by this module takes an option object with three mandatory
 
 ```js
 {
-  name: 'foo',
+  namespace: 'foo',
   type: 'bar',
-  dest: 'baz'
+  destField: 'baz'
 }
 ```
 

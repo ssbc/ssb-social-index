@@ -3,9 +3,19 @@ var ref = require('ssb-ref')
 var Defer = require('pull-defer')
 
 module.exports = function(options) {
+  if (!options.namespace || options.namespace === '') {
+    throw 'ssb-social-index must be called with a nonempty "namespace" string option';
+  }
+  if (!options.type || options.type === '') {
+    throw 'ssb-social-index must be called with a nonempty "type" string option';
+  }
+  if (!options.destField || options.destField === '') {
+    throw 'ssb-social-index must be called with a nonempty "destField" string option';
+  }
+
   const exports = {};
 
-  exports.name = options.name
+  exports.name = options.namespace
   exports.version = require('./package.json').version
 
   exports.manifest = {
@@ -206,7 +216,7 @@ module.exports = function(options) {
 
     function read ({ reverse = false, limit, live, old, dest }) {
       const content = { type: options.type }
-      content[options.dest] = dest
+      content[options.destField] = dest
 
       return pull(
         ssb.backlinks.read({
