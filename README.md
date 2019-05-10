@@ -49,7 +49,7 @@ The function exported by this module takes an option object with three mandatory
 }
 ```
 
-These options will produce a plugin named `'foo'` that indexes over messages of type `'bar'`, matching `dest` arguments in the provided functions agains a field called `'baz'` on the `'bar'` messages.
+These options will produce a plugin named `'foo'` that indexes over messages of type `'bar'`, matching `dest` arguments in the provided functions against a field called `'baz'` on the `'bar'` messages.
 
 For all exposed functions, the `dest` argument must be a FeedId/MessageId.
 
