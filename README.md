@@ -71,7 +71,7 @@ The algorithm for the socialValue is based of the following priorities:
 2. the most recent value that the 'owner' `dest` set for that key (if they've self assigned it)
 3. the most recent + 'popular' value for the `dest` / `key` (from all data in your network)
 
-### `server.about.latestValue({ key dest }, cb)`
+### `server.about.latestValue({ key, dest }, cb)`
 
 Same as socialValue, except only gets the most recent value that's been announced by anyone for this `dest` / `key`
 
