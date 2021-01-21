@@ -2,6 +2,9 @@ var pull = require('pull-stream')
 var ref = require('ssb-ref')
 var Defer = require('pull-defer')
 
+// db2
+const { seekKey } = require('bipf')
+
 module.exports = function (options) {
   if (!options.namespace || options.namespace === '') {
     throw new Error('ssb-social-index must be called with a nonempty "namespace" string option')
@@ -214,30 +217,72 @@ module.exports = function (options) {
       )
     }
 
-    function read ({ reverse = false, limit, live, old, dest }) {
-      const content = { type: options.type }
-      content[options.destField] = dest
+    const bValue = Buffer.from('value')
+    const bContent = Buffer.from('content')
+    const bAbout = Buffer.from('about')
 
-      return pull(
-        ssb.backlinks.read({
-          reverse,
-          live,
-          limit,
-          query: [{ $filter: {
-            dest,
-            value: { content: content }
-          } }]
-        })
-      )
+    function seekAbout(buffer) {
+      let p = 0 // note you pass in p!
+      p = seekKey(buffer, p, bValue)
+      if (p < 0) return
+      p = seekKey(buffer, p, bContent)
+      if (p < 0) return
+      return seekKey(buffer, p, bAbout)
+    }
+
+    function about(value) {
+      return ssb.db.operators.equal(seekAbout, value, {
+        indexType: 'value_content_about',
+      })
+    }
+
+    function read ({ reverse = false, limit, live, old, dest }) {
+      if (ssb.db) {
+        const { and, type, live: liveOp, toPullStream } = ssb.db.operators
+
+        const liveOpts = live && old ? { old: true }: {}
+
+        return pull(
+          ssb.db.query(
+            and(type(options.type), about(dest)),
+            reverse ? descending() : null,
+            limit ? paginate(limit) : null,
+            liveOp ? live(liveOpts) : null,
+            toPullStream(),
+          )
+        )
+      } else {
+        const content = { type: options.type }
+        content[options.destField] = dest
+
+        return pull(
+          ssb.backlinks.read({
+            reverse,
+            live,
+            limit,
+            query: [{ $filter: {
+              dest,
+              value: { content: content }
+            } }]
+          })
+        )
+      }
     }
 
     function getAuthor (msgId, cb) {
       if (ref.isFeedId(msgId)) return cb(null, msgId)
       if (ref.isMsgId(msgId)) {
-        ssb.get({ id: msgId, raw: true }, (err, value) => {
-          if (err) return cb(err)
-          cb(null, value.author)
-        })
+        if (ssb.db) {
+          ssb.db.get(msgId, (err, value) => {
+            if (err) return cb(err)
+            cb(null, value.author)
+          })
+        } else {
+          ssb.get({ id: msgId, raw: true }, (err, value) => {
+            if (err) return cb(err)
+            cb(null, value.author)
+          })
+        }
       } else {
         return cb(null, null)
       }
