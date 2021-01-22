@@ -217,17 +217,13 @@ module.exports = function (options) {
       )
     }
 
-    const bValue = Buffer.from('value')
-    const bContent = Buffer.from('content')
-    const bAbout = Buffer.from('about')
-
     function seekAbout(buffer) {
       let p = 0 // note you pass in p!
-      p = seekKey(buffer, p, bValue)
+      p = seekKey(buffer, p, Buffer.from('value'))
       if (p < 0) return
-      p = seekKey(buffer, p, bContent)
+      p = seekKey(buffer, p, Buffer.from('content'))
       if (p < 0) return
-      return seekKey(buffer, p, bAbout)
+      return seekKey(buffer, p, Buffer.from('about'))
     }
 
     function about(value) {
@@ -247,7 +243,7 @@ module.exports = function (options) {
             and(type(options.type), about(dest)),
             reverse ? descending() : null,
             limit ? paginate(limit) : null,
-            liveOp ? live(liveOpts) : null,
+            live ? liveOp(liveOpts) : null,
             toPullStream(),
           )
         )
