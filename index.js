@@ -228,6 +228,7 @@ module.exports = function (options) {
 
     function about(value) {
       return ssb.db.operators.equal(seekAbout, value, {
+        prefix: 32,
         indexType: 'value_content_about',
       })
     }
