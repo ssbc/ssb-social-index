@@ -237,7 +237,7 @@ module.exports = function (options) {
 
     function read ({ reverse = false, limit, live, old, dest }) {
       if (ssb.db) {
-        const { and, type, live: liveOp, toPullStream } = ssb.db.operators
+        const { and, type, descending, paginate, live: liveOp, toPullStream } = ssb.db.operators
 
         const liveOpts = live && old ? { old: true }: {}
 
