@@ -12,8 +12,7 @@ const config = { ... } // needs options
 
 // Install the plugin
 Server
-  .use(require('scuttlebot/plugins/master')) // required
-  .use(require('ssb-backlinks')) // required
+  .use(require('ssb-backlinks')) // required if not using ssb-db2
   .use(require('ssb-social-index')({
     namespace: 'edits',
     type: 'update',
