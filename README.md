@@ -65,10 +65,12 @@ server.about.socialValue({ key: 'name', dest: '@3r4+IyB5NVl2in6QOZHIu9oSrZud+NuV
 })
 ```
 
-The algorithm for the socialValue is based of the following priorities:
+The default algorithm for the socialValue is based of the following priorities:
 1. the most recent value I have set for that `dest`/ `key` (if it exists)
 2. the most recent value that the 'owner' `dest` set for that key (if they've self assigned it)
 3. the most recent + 'popular' value for the `dest` / `key` (from all data in your network)
+
+You can however provide your own custom algorithm using the option `getSocialValue`. (See code for details)
 
 ### `server.about.latestValue({ key, dest }, cb)`
 
