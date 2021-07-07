@@ -15,6 +15,7 @@ module.exports = function (options) {
   if (!options.destField || options.destField === '') {
     throw new Error('ssb-social-index must be called with a nonempty "destField" string option')
   }
+  const getSocialValue = options.getSocialValue || defaultGetSocialValue
 
   const exports = {}
 
@@ -288,7 +289,7 @@ module.exports = function (options) {
     }
   }
 
-  function getSocialValue (socialValues, yourId, authorId) {
+  function defaultGetSocialValue (socialValues, yourId, authorId) {
     if (socialValues[yourId]) {
       // you assigned a value, use this!
       return socialValues[yourId]
