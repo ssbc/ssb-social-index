@@ -36,6 +36,12 @@ module.exports = function (options) {
   }
 
   exports.init = function (ssb, config) {
+    var closed = false
+    ssb.close.hook(function (fn, args) {
+      closed = true
+      return fn.apply(this, args)
+    })
+
     return {
 
       // streams
@@ -45,6 +51,7 @@ module.exports = function (options) {
         getAuthor(dest, (err, authorId) => {
           // fallback to dest if we don't have the message being described
           if (err || !authorId) authorId = dest
+          if (closed) return stream.resolve(pull.error(new Error("flumedb instnace is closed.")))
 
           var values = {}
           stream.resolve(pull(
